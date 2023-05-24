@@ -4,32 +4,64 @@ import { StyledEngineProvider } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import Aut from '../../src/containers/AuthForm';
 import TextField from '@mui/material/TextField';
-function GetAuth() {
-    const divStyle = {
-    };
-    return (
-        <form>
-            <div>
-                <TextField
-                id="outlined-password-input"
-                label="Login"
+import { useForm } from "react-hook-form";
+import { ErrorMessage } from "@hookform/error-message";
+export default function GetAuth() {
+    const {
+        register,
+        formState: { errors },
+        handleSubmit
+      } = useForm({
+        criteriaMode: "all"
+      });
+      const onSubmit = (data) => console.log(data);
+      return (
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <h1>Log in</h1>
+           <TextField
+                label="Email"
                 type="text"
-                autoComplete="current-password"
-                />
-                <p></p>
-                <TextField
-                id="outlined-password-input"
+                {...register("Email", {
+                    required: "Поле почты должно быть заполнено",
+                  })}
+            />
+            <ErrorMessage
+            errors={errors}
+            name="Email"
+            render={({ messages }) => {
+              console.log("messages", messages);
+              return messages
+                ? Object.entries(messages).map(([type, message]) => (
+                    <p key={type}>{message}</p>
+                  ))
+                : null;
+            }}
+          />
+          <p></p>
+            <TextField
                 label="Password"
                 type="password"
-                autoComplete="current-password"
-                />
-                <p></p>
-                <Button style={{backgroundColor: '#145ea8'}} href='E:\Lab\src\index.html'>Login</Button>
-            </div>
+                {...register("Password", {
+                    required: "Поле пароля должно быть заполнено",
+                  })}
+            />
+          <ErrorMessage
+            errors={errors}
+            name="Password"
+            render={({ messages }) => {
+              console.log("messages", messages);
+              return messages
+                ? Object.entries(messages).map(([type, message]) => (
+                    <p key={type}>{message}</p>
+                  ))
+                : null;
+            }}
+          />
+          <p></p>
+          <Button type="submit" style={{backgroundColor: '#145ea8'}}>Login</Button>
         </form>
-    );
+      );
   }
-  export default GetAuth;
   ReactDOM.createRoot(document.querySelector("#auth")).render(
     <React.StrictMode>
       <StyledEngineProvider injectFirst>
